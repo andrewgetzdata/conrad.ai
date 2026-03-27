@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conrad AI — Talk to us</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Geist Sans';
+            src: url('https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/Geist-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Geist Sans';
+            src: url('https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/Geist-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Geist Sans';
+            src: url('https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/Geist-SemiBold.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Geist Sans';
+            src: url('https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/Geist-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+    <style>
+        :root {
+            --orange: #FF6600;
+            --orange-hover: #E65C00;
+            --bg-primary: #000;
+            --bg-secondary: #0a0a0a;
+            --bg-surface: #111;
+            --bg-elevated: #1a1a1a;
+            --bg-hover: #1a1a1a;
+            --text-primary: #fff;
+            --text-secondary: #888;
+            --text-tertiary: #666;
+            --text-inverse: #000;
+            --border-primary: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --container-max: 1200px;
+            --container-padding: 40px;
+            --roundness: 12px;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #fafafa;
+            --bg-surface: #f5f5f5;
+            --bg-elevated: #f0f0f0;
+            --bg-hover: #ebebeb;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --text-inverse: #ffffff;
+            --border-primary: rgba(0,0,0,0.08);
+            --border-hover: rgba(0,0,0,0.15);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Geist Sans', -apple-system, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+        }
+
+        /* --- NAV --- */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem var(--container-padding);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: color-mix(in srgb, var(--bg-primary) 85%, transparent);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .nav__logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-mark {
+            color: var(--orange);
+            font-family: 'Geist Mono', monospace;
+            font-weight: 700;
+            font-size: 1.75rem;
+            line-height: 1;
+        }
+
+        .nav__logo-text {
+            font-weight: 600;
+            font-size: 1.3rem;
+            letter-spacing: -0.02em;
+        }
+
+        .nav__cta {
+            background: none;
+            border: 1px solid var(--border-hover);
+            color: var(--text-primary);
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-family: 'Geist Sans', sans-serif;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .nav__cta:hover {
+            border-color: var(--text-secondary);
+            background: var(--bg-hover);
+        }
+
+        .nav__cta:focus-visible {
+            outline: 2px solid var(--orange);
+            outline-offset: 2px;
+        }
+
+        /* --- THEME TOGGLE --- */
+        .theme-switch {
+            display: flex;
+            border: 1px solid var(--border-primary);
+            border-radius: 9999px;
+            background: var(--bg-secondary);
+            overflow: hidden;
+        }
+
+        .switch-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 9999px;
+            background: transparent;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .switch-option:hover { color: var(--text-secondary); }
+
+        .switch-option:focus-visible {
+            outline: 2px solid var(--orange);
+            outline-offset: -2px;
+        }
+
+        .switch-option.active {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        /* --- PAGE LAYOUT --- */
+        .page {
+            padding-top: 5.5rem;
+        }
+
+        .page__layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: auto;
+            max-width: var(--container-max);
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+        }
+
+        .page__left {
+            padding: 2.5rem 3rem 3rem 0;
+            max-width: 600px;
+        }
+
+        .page__right {
+            border-left: 1px solid var(--border-primary);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HERO (left column) --- */
+        .page__hero h1 {
+            font-family: 'Geist Mono', monospace;
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+        }
+
+        .page__hero p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        /* --- PROCESS (left column) --- */
+        .process {
+            margin-top: 3rem;
+        }
+
+        .process__label {
+            font-family: 'Geist Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--orange);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+        }
+
+        .process__step {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .process__step-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--orange);
+            border-radius: 1px;
+            margin-top: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .process__step-content h3 {
+            font-family: 'Geist Mono', monospace;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .process__step-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* --- FORM CARD (right column) --- */
+        .form-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .form-tab {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: var(--bg-surface);
+            border: none;
+            cursor: pointer;
+            font-family: 'Geist Sans', sans-serif;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .form-tab:first-child {
+            border-right: 1px solid var(--border-primary);
+        }
+
+        .form-tab.active {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .form-tab:not(.active):hover {
+            background: var(--bg-elevated);
+        }
+
+        .form-body {
+            padding: 1.5rem 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact__form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            flex: 1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+
+        .form-group label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-group label .optional {
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-primary);
+            border-radius: 6px;
+            padding: 0.7rem 0.875rem;
+            font-family: 'Geist Sans', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .form-group input:hover,
+        .form-group textarea:hover {
+            border-color: var(--border-hover);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--orange);
+            background: var(--bg-elevated);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 160px;
+        }
+
+        .form-terms {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        .form-terms input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--orange);
+            cursor: pointer;
+        }
+
+        .form-submit {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            border: none;
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            margin-top: auto;
+        }
+
+        .form-submit__main {
+            background: var(--orange);
+            color: #000;
+            font-family: 'Geist Mono', monospace;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .form-submit__main:hover {
+            background: var(--orange-hover);
+        }
+
+        .form-submit__arrow {
+            background: var(--orange-hover);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1rem;
+            border: none;
+            border-left: 1px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .form-submit__arrow:hover {
+            background: #cc5200;
+        }
+
+        /* --- BOOK A CALL TAB --- */
+        .book-panel {
+            display: none;
+            padding: 2rem;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .book-panel.active {
+            display: flex;
+        }
+
+        .book-panel p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border-primary);
+        }
+
+        .footer__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer__left {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .footer__logo {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .footer__logo-text {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .footer__copy {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .footer__links {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .footer__link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8125rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer__link:hover {
+            color: var(--text-primary);
+        }
+
+        /* --- ANIMATIONS --- */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger-1 { transition-delay: 0.05s; }
+        .stagger-2 { transition-delay: 0.1s; }
+        .stagger-3 { transition-delay: 0.15s; }
+        .stagger-4 { transition-delay: 0.2s; }
+
+        /* --- RESPONSIVE --- */
+        @media screen and (max-width: 991px) {
+            .page__layout {
+                grid-template-columns: 1fr;
+            }
+            .page__right {
+                border-left: none;
+                border-top: 1px solid var(--border-primary);
+            }
+            .page__left {
+                max-width: none;
+                padding: 3rem var(--container-padding);
+            }
+        }
+
+        @media screen and (max-width: 767px) {
+            :root { --container-padding: 20px; }
+        }
+
+        /* --- GRAIN OVERLAY --- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.02;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 128px 128px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function() {
+            var stored = localStorage.getItem('theme');
+            var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var theme = stored === 'light' ? 'light' : stored === 'dark' ? 'dark' : (systemDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <span class="logo-mark">C</span>
+            <span class="nav__logo-text">Conrad AI</span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="theme-switch" role="radiogroup" aria-label="Theme">
+                <button role="radio" data-theme-value="system" aria-checked="true" aria-label="System theme" class="switch-option active">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                </button>
+                <button role="radio" data-theme-value="light" aria-checked="false" aria-label="Light theme" class="switch-option">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                <button role="radio" data-theme-value="dark" aria-checked="false" aria-label="Dark theme" class="switch-option">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
+            <a href="contact.html" class="nav__cta">Talk to us</a>
+        </div>
+    </nav>
+
+    <main class="page">
+        <div class="page__layout">
+            <!-- LEFT COLUMN -->
+            <div class="page__left">
+                <div class="page__hero fade-up">
+                    <h1>Let's build<br>together</h1>
+                    <p>Got a problem to solve?<br>Let's talk. Our team moves fast.</p>
+                </div>
+
+                <div class="process fade-up stagger-1">
+                    <p class="process__label">Our process</p>
+
+                    <div class="process__step">
+                        <div class="process__step-dot"></div>
+                        <div class="process__step-content">
+                            <h3>Discovery call</h3>
+                            <p>A quick chat to understand your goals and needs.</p>
+                        </div>
+                    </div>
+
+                    <div class="process__step">
+                        <div class="process__step-dot"></div>
+                        <div class="process__step-content">
+                            <h3>Analysis</h3>
+                            <p>We assess your current situation and spot opportunities.</p>
+                        </div>
+                    </div>
+
+                    <div class="process__step">
+                        <div class="process__step-dot"></div>
+                        <div class="process__step-content">
+                            <h3>Solution call</h3>
+                            <p>We present a tailored approach to solve your challenges.</p>
+                        </div>
+                    </div>
+
+                    <div class="process__step">
+                        <div class="process__step-dot"></div>
+                        <div class="process__step-content">
+                            <h3>Proposal</h3>
+                            <p>You get a clear plan with scope, timeline, and cost.</p>
+                        </div>
+                    </div>
+
+                    <div class="process__step">
+                        <div class="process__step-dot"></div>
+                        <div class="process__step-content">
+                            <h3>Build</h3>
+                            <p>We bring the solution to life and keep you in the loop.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN — FORM -->
+            <div class="page__right">
+                <div class="form-card">
+                    <div class="form-tabs">
+                        <button class="form-tab active" data-tab="contact">Contact</button>
+                        <button class="form-tab" data-tab="book">Book a call</button>
+                    </div>
+
+                    <div class="form-body" id="tab-contact">
+                        <form class="contact__form" action="#" method="POST">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message <span class="optional">(optional)</span></label>
+                                <textarea id="message" name="message" placeholder="Type your message..."></textarea>
+                            </div>
+                            <label class="form-terms">
+                                <input type="checkbox" required>
+                                I accept the terms
+                            </label>
+                            <div class="form-submit">
+                                <button type="submit" class="form-submit__main">Submit</button>
+                                <span class="form-submit__arrow">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="book-panel" id="tab-book">
+                        <p>Booking integration coming soon.<br>For now, reach out via the contact form.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__inner">
+                <div class="footer__left">
+                    <a href="index.html" class="footer__logo">
+                        <span class="logo-mark" style="font-size: 0.9rem;">C</span>
+                        <span class="footer__logo-text">Conrad AI</span>
+                    </a>
+                    <span class="footer__copy">&copy; 2026. All rights reserved.</span>
+                </div>
+                <div class="footer__links">
+                    <a href="#" class="footer__link">X</a>
+                    <a href="#" class="footer__link">Instagram</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // Tab switching
+        document.querySelectorAll('.form-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const target = tab.getAttribute('data-tab');
+                document.getElementById('tab-contact').style.display = target === 'contact' ? 'flex' : 'none';
+                document.getElementById('tab-book').classList.toggle('active', target === 'book');
+            });
+        });
+
+        // Theme toggle
+        (function() {
+            function getSystemTheme() {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            function getEffective(pref) {
+                return (pref === 'system' || !pref) ? getSystemTheme() : pref;
+            }
+            function updateUI(pref) {
+                document.querySelectorAll('.switch-option').forEach(btn => {
+                    const val = btn.getAttribute('data-theme-value');
+                    const active = val === pref;
+                    btn.classList.toggle('active', active);
+                    btn.setAttribute('aria-checked', active.toString());
+                });
+            }
+            function apply(pref) {
+                document.documentElement.setAttribute('data-theme', getEffective(pref));
+                updateUI(pref);
+            }
+            const stored = localStorage.getItem('theme');
+            const pref = stored || 'system';
+            apply(pref);
+
+            document.querySelectorAll('.switch-option').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const value = btn.getAttribute('data-theme-value');
+                    if (value === 'system') {
+                        localStorage.removeItem('theme');
+                    } else {
+                        localStorage.setItem('theme', value);
+                    }
+                    apply(value);
+                });
+            });
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if (!localStorage.getItem('theme')) apply('system');
+            });
+        })();
+    </script>
+</body>
+</html>
